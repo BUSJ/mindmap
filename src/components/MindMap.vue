@@ -1,17 +1,17 @@
 <template>
   <div ref="mindmap" id="mindmap" :style="mmStyle">
     <svg ref="svg" tabindex="0" :class="svgClass">
-      <g ref="content" id="content" ></g>
+      <g ref="content" id="content"></g>
     </svg>
     <div ref="dummy" id="dummy"></div>
     <div ref="menu"
-      id="menu"
-      tabindex="0"
-      v-show="showContextMenu"
-      :style="{ top: contextMenuY+'px', left: contextMenuX+'px' }"
-      @blur="showContextMenu = false"
+         id="menu"
+         tabindex="0"
+         v-show="showContextMenu"
+         :style="{ top: contextMenuY+'px', left: contextMenuX+'px' }"
+         @blur="showContextMenu = false"
     >
-      <div 
+      <div
         class="menu-item"
         v-for="(item, index) in contextMenuItems"
         :key="index"
@@ -32,13 +32,13 @@
       </button>
     </div>
     <div class="buttonList top-right">
-      <button v-show="showUndo" class="icon" :class="{disabled: !canUndo}" ref="undo" 
-        type="button" @click="undo()"
+      <button v-show="showUndo" class="icon" :class="{disabled: !canUndo}" ref="undo"
+              type="button" @click="undo()"
       >
         <i class="undo"></i>
       </button>
-      <button v-show="showUndo" class="icon" :class="{disabled: !canRedo}" ref="redo" 
-        type="button" @click="redo()"
+      <button v-show="showUndo" class="icon" :class="{disabled: !canRedo}" ref="redo"
+              type="button" @click="redo()"
       >
         <i class="redo"></i>
       </button>
@@ -48,8 +48,8 @@
       <div class="content">
         <div class="exportTo">
           <div class="optionList">
-            <div 
-              :class="`option ${index===selectedOption ? 'select' : ''} ${opt.disabled ? 'disabled' : ''}`" 
+            <div
+              :class="`option ${index===selectedOption ? 'select' : ''} ${opt.disabled ? 'disabled' : ''}`"
               v-for="(opt, index) in optionList"
               :key="index"
               @click="opt.disabled ? '' : selectedOption=index"
@@ -74,7 +74,7 @@
 
 <script>
 import * as d3 from '../js/d3'
-import { flextree } from 'd3-flextree'
+import {flextree} from 'd3-flextree'
 import JSONData from '../js/JSONData'
 import History from '../js/History'
 import toMarkdown from '../js/toMarkdown'
@@ -82,22 +82,22 @@ import toMarkdown from '../js/toMarkdown'
 export default {
   name: 'mindmap',
   props: {
-    value: { type: Array, required: true },
+    value: {type: Array, required: true},
     width: Number,
     height: Number,
-    xSpacing: { type: Number, default: 80 },
-    ySpacing: { type: Number, default: 20 },
-    draggable: { type: Boolean, default: true },
-    gps: { type: Boolean, default: true },
-    fitView: { type: Boolean, default: true },
-    download: { type: Boolean, default: true },
-    keyboard: { type: Boolean, default: true },
-    showNodeAdd: { type: Boolean, default: true },
-    contextMenu: { type: Boolean, default: true },
-    nodeClick: { type: Boolean, default: true },
-    zoomable: { type: Boolean, default: true },
-    showUndo: { type: Boolean, default: true },
-    strokeWidth: { type: Number, default: 4 },
+    xSpacing: {type: Number, default: 80},
+    ySpacing: {type: Number, default: 20},
+    draggable: {type: Boolean, default: true},
+    gps: {type: Boolean, default: true},
+    fitView: {type: Boolean, default: true},
+    download: {type: Boolean, default: true},
+    keyboard: {type: Boolean, default: true},
+    showNodeAdd: {type: Boolean, default: true},
+    contextMenu: {type: Boolean, default: true},
+    nodeClick: {type: Boolean, default: true},
+    zoomable: {type: Boolean, default: true},
+    showUndo: {type: Boolean, default: true},
+    strokeWidth: {type: Number, default: 4},
   },
   model: { // 双向绑定
     prop: 'value',
@@ -110,10 +110,18 @@ export default {
         height: this.height ? `${this.height}px` : '',
       }
     },
-    svgClass() { return `stroke-width-${this.strokeWidth}` },
-    optionTip() { return this.optionList[this.selectedOption].tip },
-    canUndo() { return this.history.canUndo },
-    canRedo() { return this.history.canRedo },
+    svgClass() {
+      return `stroke-width-${this.strokeWidth}`
+    },
+    optionTip() {
+      return this.optionList[this.selectedOption].tip
+    },
+    canUndo() {
+      return this.history.canUndo
+    },
+    canRedo() {
+      return this.history.canRedo
+    },
   },
   data: () => ({
     toRecord: true, // 判断是否需要记录mmdata的数据快照
@@ -125,11 +133,11 @@ export default {
     showPopUps: false,
     contextMenuX: 0,
     contextMenuY: 0,
-    contextMenuItems: [{ title: '删除节点', command: 0 }],
+    contextMenuItems: [{title: '删除节点', command: 0}],
     optionList: [
-      { title: 'JSON', icon: 'code-json', tip: '创建一个JSON格式的文本文件', color: 'purpleOpt' },
-      { title: '图像', icon: 'image', tip: '创建一个PNG格式的图像文件', color: 'greenOpt', disabled: true },
-      { title: 'Markdown', icon: 'markdown', tip: '创建一个Markdown格式的文本文件', color: 'grassOpt' }
+      {title: 'JSON', icon: 'code-json', tip: '创建一个JSON格式的文本文件', color: 'purpleOpt'},
+      {title: '图像', icon: 'image', tip: '创建一个PNG格式的图像文件', color: 'greenOpt', disabled: true},
+      {title: 'Markdown', icon: 'markdown', tip: '创建一个Markdown格式的文本文件', color: 'grassOpt'}
     ],
     selectedOption: 0,
     mindmap_svg: Object,
@@ -145,24 +153,40 @@ export default {
   watch: {
     mmdata: {
       handler(newVal) {
-        if (this.toRecord) { this.history.record(newVal.data) }
+        if (this.toRecord) {
+          this.history.record(newVal.data)
+        }
         this.updateMindmap()
         this.toUpdate = false
         this.$emit('change', this.mmdata.getPuredata())
       },
       deep: true,
     },
-    keyboard: function(val) { this.makeKeyboard(val) },
-    showNodeAdd: function(val) { this.makeNodeAdd(val) },
-    draggable: function(val) { this.makeDrag(val) },
-    contextMenu: function(val) { this.makeContextMenu(val) },
-    xSpacing: function() { 
-      this.depthTraverse2(this.mmdata.data, this.getTextSize)
-      this.updateMindmap() 
+    keyboard: function (val) {
+      this.makeKeyboard(val)
     },
-    ySpacing: function() { this.updateMindmap() },
-    nodeClick: function(val) { this.makeNodeClick(val) },
-    zoomable: function(val) { this.makeZoom(val) },
+    showNodeAdd: function (val) {
+      this.makeNodeAdd(val)
+    },
+    draggable: function (val) {
+      this.makeDrag(val)
+    },
+    contextMenu: function (val) {
+      this.makeContextMenu(val)
+    },
+    xSpacing: function () {
+      this.depthTraverse2(this.mmdata.data, this.getTextSize)
+      this.updateMindmap()
+    },
+    ySpacing: function () {
+      this.updateMindmap()
+    },
+    nodeClick: function (val) {
+      this.makeNodeClick(val)
+    },
+    zoomable: function (val) {
+      this.makeZoom(val)
+    },
   },
   methods: {
     init() {
@@ -172,7 +196,9 @@ export default {
       this.dummy = d3.select(this.$refs.dummy)
       // 绑定事件
       this.makeKeyboard(this.keyboard)
-      this.mindmap_svg.on('contextmenu', () => { d3.event.preventDefault() })
+      this.mindmap_svg.on('contextmenu', () => {
+        d3.event.preventDefault()
+      })
       this.mindmapSvgZoom = this.zoom.scaleExtent([0.1, 8]).on('zoom', () => {
         this.mindmap_g.attr('transform', d3.event.transform)
       })
@@ -186,13 +212,15 @@ export default {
       this.makeNodeClick(this.nodeClick)
     },
     // 事件
-    makeKeyboard(val) { this.mindmap_svg.on('keydown', val ? this.svgKeyDown : null) },
+    makeKeyboard(val) {
+      this.mindmap_svg.on('keydown', val ? this.svgKeyDown : null)
+    },
     makeNodeAdd(val) {
       const fObject = this.mindmap_g.selectAll('foreignObject')
       const gBtn = this.mindmap_g.selectAll('.gButton')
 
       if (val) {
-        const { mouseLeave, mouseEnter, gBtnClick } = this
+        const {mouseLeave, mouseEnter, gBtnClick} = this
 
         fObject.on('mouseenter', mouseEnter).on('mouseleave', mouseLeave)
         gBtn.on('mouseenter', mouseEnter).on('mouseleave', mouseLeave).on('click', gBtnClick)
@@ -206,7 +234,7 @@ export default {
     },
     makeDrag(val) {
       if (val) {
-        const { mindmap_g, dragged, dragended } = this
+        const {mindmap_g, dragged, dragended} = this
         mindmap_g.selectAll('foreignObject').filter((d) => d.depth !== 0)// 非根节点才可以拖拽
           .call(d3.drag().container((d, i, n) => n[i].parentNode.parentNode).on('drag', dragged).on('end', dragended))
       } else {
@@ -273,14 +301,14 @@ export default {
       await d3.transition().end().then(() => {
         const div = this.$refs.mindmap
         const content = this.$refs.content.getBBox()
-        const { k } = d3.zoomTransform(this.$refs.svg)
+        const {k} = d3.zoomTransform(this.$refs.svg)
 
         const x = (
-          -(div.offsetWidth - k*content.width)/(2*k) 
+          -(div.offsetWidth - k * content.width) / (2 * k)
           - 5
         )
         const y = (
-          -(div.offsetHeight - k*content.height)/(2*k) 
+          -(div.offsetHeight - k * content.height) / (2 * k)
           - (-this.dTop.x - this.foreignY(this.dTop))
         )
 
@@ -291,11 +319,11 @@ export default {
       await d3.transition().end().then(() => {
         const rect = this.$refs.content.getBBox()
         const div = this.$refs.mindmap
-        
+
         const multipleX = div.offsetWidth / rect.width
         const multipleY = div.offsetHeight / rect.height
         const multiple = Math.min(multipleX, multipleY)
-        
+
         this.mindmap_svg.transition(this.easePolyInOut).call(this.zoom.scaleTo, multiple)
       })
     },
@@ -335,6 +363,11 @@ export default {
     },
     // 键盘
     svgKeyDown() {
+
+      const edit = document.getElementById('editing')
+      if (edit) {
+        return;
+      }
       const event = d3.event
       const keyName = event.key
       // 针对导图的操作
@@ -347,42 +380,68 @@ export default {
           this.redo()
         }
       }
+
       // 针对节点的操作
-      const sele = d3.select('#selectedNode')
-      if (!sele.node()) { return }
+      // var sele = d3.select('#selectedNode')
+      // if (!sele.node()) { return }
+      if (!this.selectedElement) {
+        var sele = this.mindmap_svg.select('g>g')
+        this.selectNode(sele.node())
+      }
 
-      const seleData = sele.data()[0]
-      const seleRawData = sele.data()[0].data
-      const pNode = sele.node().parentNode
-      const newJSON = { name: '新建节点', children: [] }
+      const node = this.selectedElement
+      const seleData = this.selectedElement.__data__
+      const pNode = this.selectedElement.parentNode
+      const newJSON = {name: '新建节点', children: []}
 
-      if (keyName === 'Tab') { // 添加子节点
+      if (keyName === 'Enter') { // 添加子节点
         d3.event.preventDefault()
-        this.add(seleRawData, newJSON)
-        this.editNew(newJSON, seleData.depth+1, pNode)
-      } else if (keyName === 'Enter') { // 添加弟弟节点
+        this.add(seleData.data, newJSON)
+        this.editNew(newJSON, seleData.depth + 1, pNode)
+      } else if (keyName === 'Tab') { // 添加弟弟节点
         d3.event.preventDefault()
         if (pNode.isSameNode(this.$refs.content)) {
-          this.add(seleRawData, newJSON)// 根节点enter时，等效tab
-          this.editNew(newJSON, seleData.depth+1, pNode)
+          this.add(seleData.data, newJSON)// 根节点enter时，等效tab
+          this.editNew(newJSON, seleData.depth + 1, pNode)
         } else {
-          this.insert(seleRawData, newJSON, 1)
+          this.insert(seleData.data, newJSON, 1)
           this.editNew(newJSON, seleData.depth, pNode)
         }
       } else if (keyName === 'Backspace') { // 删除节点
         d3.event.preventDefault()
-        this.del(seleRawData)
+        this.del(seleData)
+      } else if (keyName === 'l') {
+        var firstChildNode = node.querySelector('g[class*=depth]')
+        firstChildNode && this.selectNode(firstChildNode)
+      } else if (keyName === 'h') {
+        pNode != this.$refs.content && this.selectNode(pNode)
+      } else if (keyName === 'k') {
+        node.previousElementSibling && this.selectNode(node.previousElementSibling)
+      } else if (keyName === 'j') {
+        node.nextElementSibling && this.selectNode(node.nextElementSibling)
+      } else if (keyName === 'a') {
+        this.editNode(node)
+      } else if (keyName === 'd') {
+        var next = this.selectedElement.nextElementSibling
+        if (!(next && next.className.baseVal.includes('node'))) {
+          next = this.selectedElement.parentNode;
+        }
+        this.del(this.selectedElement.__data__.data)
+        this.selectNode(next)
       }
     },
     divKeyDown() {
-      if (d3.event.key === 'Enter') {
-        // d3.event.preventDefault()
-        // document.execCommand('insertHTML', false, '<br>')
-      }   
+      // if (d3.event.ctrlKey && d3.event.key === 'Enter') {
+      //   d3.event.target.innerText = d3.event.target.innerText + '<br>';
+      // }
+      if (d3.event.key === 'Escape') {
+        d3.event.target.blur();
+      }
     },
     // 节点操作
     updateNodeName() { // 文本编辑完成时
-      const editP = document.querySelector('#editing > foreignObject > div')
+      // const editP = document.querySelector('#editing > foreignObject > div')
+      const editP = d3.event.target
       window.getSelection().removeAllRanges()// 清除选中
       const editText = editP.innerText
       d3.select('g#editing').each((d, i, n) => {
@@ -394,17 +453,21 @@ export default {
     },
     removeSelectedNode() {
       const sele = this.selectedElement
-      if (sele) { sele.removeAttribute('id') }
+      if (sele) {
+        sele.removeAttribute('id')
+      }
+
     },
     selectNode(n) { // 选中节点
-      if (n.getAttribute('id') !== 'selectedNode') {
+      if (n.getAttribute('id') !== 'selectedNode' && n.className.baseVal.includes('node')) {
         this.removeSelectedNode()
         d3.select(n).attr('id', 'selectedNode')
         this.selectedElement = n
       }
     },
     editNode(n) { // 编辑节点
-      this.removeSelectedNode()
+      // this.removeSelectedNode()
+      this.selectNode(n)
       n.setAttribute('id', 'editing')
       const fObj = d3.select(n).selectAll('foreignObject').filter((a, b, c) => c[b].parentNode === n)
       this.focusNode(fObj)
@@ -413,7 +476,7 @@ export default {
       window.getSelection().selectAllChildren(fdiv)
     },
     focusNode(fObj) { // 使节点处于可视区域
-      const { k } = d3.zoomTransform(this.$refs.svg)// 放大缩小倍数
+      const {k} = d3.zoomTransform(this.$refs.svg)// 放大缩小倍数
       const fObjPos = fObj.node().getBoundingClientRect()
       const svgPos = this.mindmap_svg.node().getBoundingClientRect()
 
@@ -423,17 +486,20 @@ export default {
       const t = fObjPos.top - svgPos.top
       const x = (r > 0 && r) || (l < 0 && l)
       const y = (b > 0 && b) || (t < 0 && t)
-      
+
       // 保持节点可视
-      if (x) { this.mindmap_svg.call(this.zoom.translateBy, -x/k, 0) }
-      if (y) { this.mindmap_svg.call(this.zoom.translateBy, 0, -y/k) }
+      if (x) {
+        this.mindmap_svg.call(this.zoom.translateBy, -x / k, 0)
+      }
+      if (y) {
+        this.mindmap_svg.call(this.zoom.translateBy, 0, -y / k)
+      }
     },
     editNew(newJSON, depth, pNode) { // 聚焦新节点
       d3.transition().end().then(() => {
         const node = d3.select(pNode).selectAll(`g.node.depth_${depth}`)
           .filter((b) => b.data === newJSON)
           .node()
-
         this.editNode(node)
       }, (err) => {
         console.log(err)
@@ -464,7 +530,7 @@ export default {
               fdiv.contentEditable = false
             } else {
               flag = true
-              this.removeSelectedNode()
+              // this.removeSelectedNode()
               clickedNode.setAttribute('id', 'editing')
               this.focusNode(fObj)
             }
@@ -493,15 +559,17 @@ export default {
       this.contextMenuY = d3.event.pageY - svgPos.top - window.pageYOffset
       this.showContextMenu = true
       this.clearSelection()
-      setTimeout(() => { this.$refs.menu.focus() }, 300)
+      setTimeout(() => {
+        this.$refs.menu.focus()
+      }, 300)
     },
     gBtnClick(a, i, n) { // 添加子节点
       if (n[i].style.opacity === '1') {
-        const newJSON = { name: '新建节点', children: [] }
+        const newJSON = {name: '新建节点', children: []}
         const d = d3.select(n[i].parentNode).data()[0]
         this.add(d.data, newJSON)
         this.mouseLeave(null, i, n)
-        this.editNew(newJSON, d.depth+1, n[i].parentNode)
+        this.editNew(newJSON, d.depth + 1, n[i].parentNode)
       }
     },
     clickMenu(item) {
@@ -528,22 +596,22 @@ export default {
     },
     // 拖拽
     draggedNodeRenew(draggedNode, targetX, targetY, dura = 0) {
-      const { link, xSpacing } = this
+      const {link, xSpacing} = this
       const tran = d3.transition().duration(dura).ease(d3.easePoly)
       d3.select(draggedNode).transition(tran).attr('transform', `translate(${targetY},${targetX})`)
       // 更新draggedNode与父节点的path
       d3.select(draggedNode).each((d) => {
         d3.select(`path#path_${d.data.id}`).transition(tran).attr('d', `${link({
           source: [
-            -targetY + (d.parent ? d.parent.data.size[1] : 0) - xSpacing, 
-            -targetX + (d.parent ? d.parent.data.size[0]/2 : 0)
+            -targetY + (d.parent ? d.parent.data.size[1] : 0) - xSpacing,
+            -targetX + (d.parent ? d.parent.data.size[0] / 2 : 0)
           ],
-          target: [0, d.data.size[0]/2],
-        })}L${d.data.size[1] - xSpacing},${d.data.size[0]/2}`)
+          target: [0, d.data.size[0] / 2],
+        })}L${d.data.size[1] - xSpacing},${d.data.size[0] / 2}`)
       })
     },
     draggedNodeChildrenRenew(d, px, py) {
-      const { draggedNodeChildrenRenew } = this
+      const {draggedNodeChildrenRenew} = this
       d.px = px
       d.py = py
       if (d.children) {
@@ -554,7 +622,7 @@ export default {
       }
     },
     dragged(a, i, n) { // 拖拽中【待完善】
-      const { draggedNodeChildrenRenew, draggedNodeRenew, mindmap_g, xSpacing } = this
+      const {draggedNodeChildrenRenew, draggedNodeRenew, mindmap_g, xSpacing} = this
       const draggedNode = n[i].parentNode
       const fObject = n[i]
       // 选中
@@ -591,7 +659,7 @@ export default {
           }
           // 重叠触发矩形边框
           if ((targetY > rect.y) && (targetY < rect.y + rect.width)
-          && (targetX > rect.x) && (targetX < rect.x + rect.height)) {
+            && (targetX > rect.x) && (targetX < rect.x + rect.height)) {
             gNode.setAttribute('id', 'newParentNode')
           } else if (gNode.getAttribute('id') === 'newParentNode') {
             gNode.removeAttribute('id')
@@ -599,13 +667,13 @@ export default {
         })
     },
     dragback(subject, draggedNode) {
-      const { draggedNodeChildrenRenew, draggedNodeRenew } = this
+      const {draggedNodeChildrenRenew, draggedNodeRenew} = this
       draggedNodeChildrenRenew(subject, 0, 0)
       draggedNodeRenew(draggedNode, subject.dx, subject.dy, 1000)
     },
     dragended(d, i, n) {
-      const { dragback, root } = this
-      const { subject } = d3.event
+      const {dragback, root} = this
+      const {subject} = d3.event
       const draggedNode = n[i].parentNode
       let draggedParentNode = draggedNode.parentNode
       if (draggedParentNode.isEqualNode(this.$refs.content)) { // 拖拽的是根节点时复原
@@ -620,7 +688,7 @@ export default {
             // 处理数据
             draggedNode.remove()
             this.del(draggedD.data)
-            this.add(newParentD.data, draggedD.data) 
+            this.add(newParentD.data, draggedD.data)
           })
         })
         return
@@ -637,7 +705,7 @@ export default {
           dragback(subject, draggedNode)
           return
         }
-        const a = { x0: Infinity, x1: -Infinity }
+        const a = {x0: Infinity, x1: -Infinity}
         draggedBrotherNodes.each((b, i, n) => {
           if (b.x > subject.x && b.x > a.x1 && b.x < (subject.x + subject.px)) { // 新哥哥节点
             a.x1 = b.x
@@ -671,23 +739,37 @@ export default {
       this.draw()
       this.initNodeEvent()
     },
-    gClass(d) { return `depth_${d.depth} node` },
-    gTransform(d) { return `translate(${d.dy},${d.dx})` },
-    foreignY(d) { return -d.data.size[0]/2 - 5 },
-    gBtnTransform(d) { return `translate(${d.data.size[1] + 8 - this.xSpacing},${d.data.size[0]/2 - 12})` },
-    pathId(d) { return `path_${d.data.id}` },
-    pathClass(d) { return `depth_${d.depth}` },
-    pathColor(d) { return d.data.color },
+    gClass(d) {
+      return `depth_${d.depth} node`
+    },
+    gTransform(d) {
+      return `translate(${d.dy},${d.dx})`
+    },
+    foreignY(d) {
+      return -d.data.size[0] / 2 - 5
+    },
+    gBtnTransform(d) {
+      return `translate(${d.data.size[1] + 8 - this.xSpacing},${d.data.size[0] / 2 - 12})`
+    },
+    pathId(d) {
+      return `path_${d.data.id}`
+    },
+    pathClass(d) {
+      return `depth_${d.depth}`
+    },
+    pathColor(d) {
+      return d.data.color
+    },
     path(d) {
       return `${
         this.link({
           source: [
             (d.parent ? d.parent.y + d.parent.data.size[1] : 0) - d.y - this.xSpacing, // 横坐标
-            (d.parent ? d.parent.x + d.parent.data.size[0]/2: 0) - d.x,// 纵坐标
+            (d.parent ? d.parent.x + d.parent.data.size[0] / 2 : 0) - d.x,// 纵坐标
           ],
-          target: [0, d.data.size[0]/2],
-          })
-        }L${d.data.size[1] - this.xSpacing},${d.data.size[0]/2}`
+          target: [0, d.data.size[0] / 2],
+        })
+        }L${d.data.size[1] - this.xSpacing},${d.data.size[0] / 2}`
     },
     nest(d, i, n) {
       const dd = d.children
@@ -705,8 +787,8 @@ export default {
       d3.create('g').data()
     },
     appendNode(enter) {
-      const { 
-        gClass, gTransform, updateNodeName, divKeyDown, foreignY, gBtnTransform, 
+      const {
+        gClass, gTransform, updateNodeName, divKeyDown, foreignY, gBtnTransform,
         pathId, pathClass, pathColor, path, nest, fdivMouseDown
       } = this
 
@@ -724,16 +806,16 @@ export default {
           let spacing = parseInt(b1, 10) + parseInt(b2, 10)
           spacing = spacing ? spacing : 0
           foreign.filter((d, index) => i === index)
-            .attr('width', l[0].contentRect.width + spacing*2)// div和foreign border
-            .attr('height', l[0].contentRect.height + spacing*2)
+            .attr('width', l[0].contentRect.width + spacing * 2)// div和foreign border
+            .attr('height', l[0].contentRect.height + spacing * 2)
         })
         observer.observe(n[i])
       })
-      
+
       const gBtn = gNode.append('g').attr('class', 'gButton').attr('transform', gBtnTransform)
       gBtn.append('rect').attr('width', 24).attr('height', 24).attr('rx', 3).attr('ry', 3)
       gBtn.append('path').attr('d', 'M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z')
-      
+
       const enterData = enter.data()
       if (enterData.length) {
         if (enterData[0].data.id !== '0') {
@@ -744,7 +826,7 @@ export default {
             .attr('stroke', pathColor)
             .attr('d', path)
         } else if (enterData[0].data.id === '0') { // 根节点
-          foreign.attr('y', (d) => foreignY(d)+d.size[0]/2)
+          foreign.attr('y', (d) => foreignY(d) + d.size[0] / 2)
         }
 
         gNode.each(nest)
@@ -755,7 +837,7 @@ export default {
       return gNode
     },
     updateNode(update) {
-      const { 
+      const {
         gClass, gTransform, easePolyInOut, foreignY, gBtnTransform, pathId, pathClass, pathColor, path, nest
       } = this
 
@@ -769,9 +851,9 @@ export default {
         const foreign = node.selectAll('foreignObject')
           .filter((d, i, n) => n[i].parentNode === node.node())
           .data((d) => [d]) // must rebind the children using selection.data to give them the new data.
-          .attr('y', d.data.id !== '0' ? foreignY(d) : (foreignY(d) + d.size[0]/2))
-          
-        
+          .attr('y', d.data.id !== '0' ? foreignY(d) : (foreignY(d) + d.size[0] / 2))
+
+
         foreign.select('div').text(d.data.name)
         node.select('path')
           .filter((d, i, n) => n[i].parentNode === node.node())
@@ -780,9 +862,9 @@ export default {
           .attr('stroke', pathColor(d))
           .transition(easePolyInOut)
           .attr('d', path(d))
-        
+
         node.each(nest)
-        
+
         node.selectAll('g.gButton')
           .filter((d, i, n) => n[i].parentNode === node.node())
           .attr('transform', gBtnTransform(d))
@@ -794,8 +876,8 @@ export default {
       exit.filter((d, i, n) => n[i].classList[0] !== 'gButton').remove()
     },
     draw() { // 生成svg
-      const { mindmap_g, appendNode, updateNode, exitNode } = this
-      const d = [ this.root ]
+      const {mindmap_g, appendNode, updateNode, exitNode} = this
+      const d = [this.root]
 
       mindmap_g.selectAll(`g${d[0] ? `.depth_${d[0].depth}.node` : ''}`)
         .data(d)
@@ -806,8 +888,8 @@ export default {
         )
     },
     tree() { // 数据处理
-      const { mmdata, ySpacing } = this
-      const layout = flextree({ spacing: ySpacing })
+      const {mmdata, ySpacing} = this
+      const layout = flextree({spacing: ySpacing})
       const t = layout.hierarchy(mmdata.data[0])
       layout(t)
 
@@ -817,16 +899,20 @@ export default {
         a.dx = a.x - (a.parent ? a.parent.x : 0)
         a.dy = a.y - (a.parent ? a.parent.y : 0)
 
-        if (!a.children) { a.children = [] }
+        if (!a.children) {
+          a.children = []
+        }
       })
     },
     getDTop() {
       let t = this.root
-      while (t.children[0]) { t = t.children[0] }
+      while (t.children[0]) {
+        t = t.children[0]
+      }
       this.dTop = t
     },
     getTextSize(t) {
-      const { dummy, xSpacing } = this
+      const {dummy, xSpacing} = this
       let textWidth = 0
       let textHeight = 0
       dummy.selectAll('.dummyText')
@@ -842,9 +928,9 @@ export default {
       t.size = [textHeight, textWidth + xSpacing]
     },
     clearSelection() { // 清除右键触发的选中单词
-      if(document.selection && document.selection.empty) {
+      if (document.selection && document.selection.empty) {
         document.selection.empty()
-      } else if(window.getSelection) {
+      } else if (window.getSelection) {
         const sel = window.getSelection()
         sel.removeAllRanges()
       }
@@ -853,7 +939,9 @@ export default {
       for (let index = 0; index < d.length; index++) {
         const dChild = d[index]
         func(dChild)
-        if (dChild.children) { this.depthTraverse2(dChild.children, func) }
+        if (dChild.children) {
+          this.depthTraverse2(dChild.children, func)
+        }
       }
     },
     addWatch() {
@@ -864,9 +952,9 @@ export default {
         } else {
           this.toUpdate = true
         }
-      }, { 
-        immediate: true, 
-        deep: true, 
+      }, {
+        immediate: true,
+        deep: true,
       })
     }
   },
@@ -885,5 +973,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../css/MindMap.scss'
+@import '../css/MindMap.scss'
 </style>
