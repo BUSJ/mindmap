@@ -1,6 +1,6 @@
 {
-  "name": "@hellowuxin/mindmap",
-  "version": "1.7.3",
+  "name": "BUSJ/mindmap",
+  "version": "1.0.0",
   "description": "Mindmap Vue Component",
   "author": "伍鑫",
   "scripts": {
@@ -73,9 +73,9 @@
     "last 2 versions"
   ],
   "bugs": {
-    "url": "https://github.com/hellowuxin/mindmap/issues"
+    "url": "https://github.com/BUSJ/mindmap/issues"
   },
-  "homepage": "https://github.com/hellowuxin/mindmap#readme",
+  "homepage": "https://github.com/BUSJ/mindmap#readme",
   "keywords": [
     "mindmap",
     "vue",
@@ -84,6 +84,6 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hellowuxin/mindmap.git"
+    "url": "git+https://github.com/BUSJ/mindmap.git"
   }
 }
