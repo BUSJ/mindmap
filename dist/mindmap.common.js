@@ -7044,12 +7044,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4145bc58-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js??ref--18-0!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MindMap.vue?vue&type=template&id=312051ff&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4145bc58-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js??ref--18-0!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MindMap.vue?vue&type=template&id=85c75d7e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"mindmap",style:(_vm.mmStyle),attrs:{"id":"mindmap"}},[_c('svg',{ref:"svg",class:_vm.svgClass,attrs:{"tabindex":"0"}},[_c('g',{ref:"content",attrs:{"id":"content"}})]),_c('div',{ref:"dummy",attrs:{"id":"dummy"}}),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showContextMenu),expression:"showContextMenu"}],ref:"menu",style:({ top: _vm.contextMenuY+'px', left: _vm.contextMenuX+'px' }),attrs:{"id":"menu","tabindex":"0"},on:{"blur":function($event){_vm.showContextMenu = false}}},_vm._l((_vm.contextMenuItems),function(item,index){return _c('div',{key:index,staticClass:"menu-item",on:{"click":function($event){return _vm.clickMenu(item)}}},[_c('div',[_vm._v(_vm._s(item.title))])])}),0),_c('div',{staticClass:"buttonList right-bottom"},[_c('button',{directives:[{name:"show",rawName:"v-show",value:(_vm.gps),expression:"gps"}],ref:"gps",staticClass:"icon",attrs:{"type":"button"},on:{"click":function($event){return _vm.makeCenter()}}},[_c('i',{staticClass:"gps"})]),_c('button',{directives:[{name:"show",rawName:"v-show",value:(_vm.fitView),expression:"fitView"}],ref:"fitView",staticClass:"icon",attrs:{"type":"button"},on:{"click":function($event){return _vm.fitContent()}}},[_c('i',{staticClass:"fitView"})]),_c('button',{directives:[{name:"show",rawName:"v-show",value:(_vm.download),expression:"download"}],ref:"download",staticClass:"icon",attrs:{"type":"button"},on:{"click":function($event){_vm.showPopUps=true}}},[_c('i',{staticClass:"download"})])]),_c('div',{staticClass:"buttonList top-right"},[_c('button',{directives:[{name:"show",rawName:"v-show",value:(_vm.showUndo),expression:"showUndo"}],ref:"undo",staticClass:"icon",class:{disabled: !_vm.canUndo},attrs:{"type":"button"},on:{"click":function($event){return _vm.undo()}}},[_c('i',{staticClass:"undo"})]),_c('button',{directives:[{name:"show",rawName:"v-show",value:(_vm.showUndo),expression:"showUndo"}],ref:"redo",staticClass:"icon",class:{disabled: !_vm.canRedo},attrs:{"type":"button"},on:{"click":function($event){return _vm.redo()}}},[_c('i',{staticClass:"redo"})])]),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showPopUps),expression:"showPopUps"}],staticClass:"pop-ups"},[_c('div',{staticClass:"layer"}),_c('div',{staticClass:"content"},[_c('div',{staticClass:"exportTo"},[_c('div',{staticClass:"optionList"},_vm._l((_vm.optionList),function(opt,index){return _c('div',{key:index,class:("option " + (index===_vm.selectedOption ? 'select' : '') + " " + (opt.disabled ? 'disabled' : '')),on:{"click":function($event){opt.disabled ? '' : _vm.selectedOption=index}}},[_c('div',{class:("icon " + (opt.color))},[_c('i',{class:opt.icon})]),_c('div',{staticClass:"text"},[_vm._v(_vm._s(opt.title))])])}),0),_c('div',{staticClass:"optionTip"},[_vm._v(_vm._s(_vm.optionTip))]),_c('div',{staticClass:"action"},[_c('div',{staticClass:"spacer"}),_c('button',{staticClass:"cancel",on:{"click":function($event){_vm.showPopUps=false}}},[_vm._v("取消")]),_c('button',{on:{"click":function($event){_vm.exportTo(); _vm.showPopUps=false}}},[_vm._v("导出")])])])])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/MindMap.vue?vue&type=template&id=312051ff&
+// CONCATENATED MODULE: ./src/components/MindMap.vue?vue&type=template&id=85c75d7e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -12883,16 +12883,12 @@ function toMarkdown(data) {
       var event = on_event;
       var keyName = event.key; // 针对导图的操作
 
-      if (event.metaKey) {
-        if (keyName === 'z') {
-          // 撤销
-          on_event.preventDefault();
-          this.undo();
-        } else if (keyName === 'y') {
-          // 重做
-          on_event.preventDefault();
-          this.redo();
-        }
+      if (keyName === 'u') {
+        // 撤销
+        this.undo();
+      } else if (keyName === 'U') {
+        // 重做
+        this.redo();
       } // 针对节点的操作
       // var sele = d3.select('#selectedNode')
       // if (!sele.node()) { return }
@@ -12910,16 +12906,14 @@ function toMarkdown(data) {
         name: '新建节点',
         children: []
       };
+      on_event.preventDefault();
 
       if (keyName === 'Enter') {
         // 添加子节点
-        on_event.preventDefault();
         this.add(seleData.data, newJSON);
         this.editNew(newJSON, seleData.depth + 1, pNode);
       } else if (keyName === 'Tab') {
         // 添加弟弟节点
-        on_event.preventDefault();
-
         if (pNode.isSameNode(this.$refs.content)) {
           this.add(seleData.data, newJSON); // 根节点enter时，等效tab
 
@@ -12930,7 +12924,6 @@ function toMarkdown(data) {
         }
       } else if (keyName === 'Backspace') {
         // 删除节点
-        on_event.preventDefault();
         this.del(seleData);
       } else if (keyName === 'l') {
         var firstChildNode = node.querySelector('g[class*=depth]');
@@ -12938,21 +12931,47 @@ function toMarkdown(data) {
       } else if (keyName === 'h') {
         pNode != this.$refs.content && this.selectNode(pNode);
       } else if (keyName === 'k') {
-        node.previousElementSibling && this.selectNode(node.previousElementSibling);
+        var preNode = this.getPreNode(node);
+        preNode && this.selectNode(preNode);
       } else if (keyName === 'j') {
-        node.nextElementSibling && this.selectNode(node.nextElementSibling);
+        var nextNode = this.getNextNode(node);
+        nextNode && this.selectNode(nextNode);
       } else if (keyName === 'a') {
         this.editNode(node);
       } else if (keyName === 'd') {
-        var next = this.selectedElement.nextElementSibling;
+        if (pNode != this.$refs.content) {
+          var next = this.getNextNode(node) || this.getPreNode(node);
 
-        if (!(next && next.className.baseVal.includes('node'))) {
-          next = this.selectedElement.parentNode;
+          if (!next) {
+            next = this.selectedElement.parentNode;
+          }
+
+          this.del(this.selectedElement.__data__.data);
+          this.selectNode(next);
         }
-
-        this.del(this.selectedElement.__data__.data);
-        this.selectNode(next);
       }
+    },
+    getNextNode: function getNextNode(n) {
+      if (n && n.nextElementSibling) {
+        if (n.nextElementSibling.className.baseVal.includes('node')) {
+          return n.nextElementSibling;
+        } else {
+          return this.getNextNode(n.nextElementSibling);
+        }
+      }
+
+      return null;
+    },
+    getPreNode: function getPreNode(n) {
+      if (n && n.previousElementSibling) {
+        if (n.previousElementSibling.className.baseVal.includes('node')) {
+          return n.previousElementSibling;
+        } else {
+          return this.getPreNode(n.previousElementSibling);
+        }
+      }
+
+      return null;
     },
     divKeyDown: function divKeyDown() {
       // if (d3.event.ctrlKey && d3.event.key === 'Enter') {

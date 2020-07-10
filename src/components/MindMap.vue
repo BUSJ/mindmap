@@ -371,16 +371,11 @@ export default {
       const event = d3.event
       const keyName = event.key
       // 针对导图的操作
-      if (event.metaKey) {
-        if (keyName === 'z') { // 撤销
-          d3.event.preventDefault()
-          this.undo()
-        } else if (keyName === 'y') { // 重做
-          d3.event.preventDefault()
-          this.redo()
-        }
+      if (keyName === 'u') { // 撤销
+        this.undo()
+      } else if (keyName === 'U') { // 重做
+        this.redo()
       }
-
       // 针对节点的操作
       // var sele = d3.select('#selectedNode')
       // if (!sele.node()) { return }
@@ -394,12 +389,12 @@ export default {
       const pNode = this.selectedElement.parentNode
       const newJSON = {name: '新建节点', children: []}
 
+      d3.event.preventDefault()
+
       if (keyName === 'Enter') { // 添加子节点
-        d3.event.preventDefault()
         this.add(seleData.data, newJSON)
         this.editNew(newJSON, seleData.depth + 1, pNode)
       } else if (keyName === 'Tab') { // 添加弟弟节点
-        d3.event.preventDefault()
         if (pNode.isSameNode(this.$refs.content)) {
           this.add(seleData.data, newJSON)// 根节点enter时，等效tab
           this.editNew(newJSON, seleData.depth + 1, pNode)
@@ -408,7 +403,6 @@ export default {
           this.editNew(newJSON, seleData.depth, pNode)
         }
       } else if (keyName === 'Backspace') { // 删除节点
-        d3.event.preventDefault()
         this.del(seleData)
       } else if (keyName === 'l') {
         var firstChildNode = node.querySelector('g[class*=depth]')
@@ -416,19 +410,43 @@ export default {
       } else if (keyName === 'h') {
         pNode != this.$refs.content && this.selectNode(pNode)
       } else if (keyName === 'k') {
-        node.previousElementSibling && this.selectNode(node.previousElementSibling)
+        var preNode = this.getPreNode(node)
+        preNode && this.selectNode(preNode)
       } else if (keyName === 'j') {
-        node.nextElementSibling && this.selectNode(node.nextElementSibling)
+        var nextNode = this.getNextNode(node)
+        nextNode && this.selectNode(nextNode)
       } else if (keyName === 'a') {
         this.editNode(node)
       } else if (keyName === 'd') {
-        var next = this.selectedElement.nextElementSibling
-        if (!(next && next.className.baseVal.includes('node'))) {
-          next = this.selectedElement.parentNode;
+        if (pNode != this.$refs.content) {
+          var next = this.getNextNode(node) || this.getPreNode(node);
+          if (!next) {
+            next = this.selectedElement.parentNode;
+          }
+          this.del(this.selectedElement.__data__.data)
+          this.selectNode(next)
         }
-        this.del(this.selectedElement.__data__.data)
-        this.selectNode(next)
       }
+    },
+    getNextNode(n) {
+      if (n && n.nextElementSibling) {
+        if (n.nextElementSibling.className.baseVal.includes('node')) {
+          return n.nextElementSibling;
+        } else {
+          return this.getNextNode(n.nextElementSibling)
+        }
+      }
+      return null
+    },
+    getPreNode(n) {
+      if (n && n.previousElementSibling) {
+        if (n.previousElementSibling.className.baseVal.includes('node')) {
+          return n.previousElementSibling;
+        } else {
+          return this.getPreNode(n.previousElementSibling)
+        }
+      }
+      return null
     },
     divKeyDown() {
       // if (d3.event.ctrlKey && d3.event.key === 'Enter') {
